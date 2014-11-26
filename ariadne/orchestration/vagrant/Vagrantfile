@@ -1,5 +1,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
+
+
 ############################################################
 # VARIABLES
 
@@ -9,6 +11,7 @@ VG_BOX_NAME = "debian_wheezy_770_64bit"
 # Local virtual machine for development
 VB_DEV_VM_NAME = "dev.ariadne.vm"
 VB_DEV_VM_IP = "192.168.51.10"
+
 ############################################################
 
 
@@ -21,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # Vagrant box name. This the Vagrant template (created by Packer) from which the vagrant vm will be generated
         devel.vm.box = VG_BOX_NAME
 
-        # Hostname for the generated vagrant box
+        # Hostname for the generated Vagrant vm
         devel.vm.hostname = VB_DEV_VM_NAME
 
         # Sets the IP
@@ -30,13 +33,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # NFS settings
         devel.vm.synced_folder "../../projects", "/vagrant", type: "nfs"
 
+        # Virtualbox settings
         devel.vm.provider "virtualbox" do |vb|
             vb.name = VB_DEV_VM_NAME
 
-            ## Don't boot with headless mode => shows virtualbox UI. Uncomment for troubleshooting.
+            ## If true it does not boot in headless mode => shows virtualbox UI. Uncomment only for troubleshooting.
             #vb.gui = true
 
-            # Use VBoxManage to customize the VM. For example to change memory:
+            # Uses VBoxManage to customize the VM
             vb.customize ["modifyvm", :id, "--memory", "512"]
             vb.customize ["modifyvm", :id, "--cpus", "1"]
             vb.customize ["modifyvm", :id, "--ioapic", "on"]
