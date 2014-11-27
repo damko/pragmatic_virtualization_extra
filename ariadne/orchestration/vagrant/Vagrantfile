@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 VG_BOX_NAME = "debian_wheezy_770_64bit"
 
 # Local virtual machine for development
-VB_DEV_VM_NAME = "dev.ariadne.vm"
+VB_DEV_VM_NAME = "ariadne-dev"
 
 ############################################################
 
