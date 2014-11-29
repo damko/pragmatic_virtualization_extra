@@ -7,35 +7,23 @@
   register: php5fpm
   failed_when: "'is not installed' in php5fpm.stderr"
 
-# This is here to show how you can set a variable inside a task
-- name: register php_installed == true
-  shell: echo "true"
-  register: php_installed
-  when: php5fpm|success
-
-# This is here to show how you can set a variable inside a task
-- name: register php_installed == false
-  shell: echo "false"
-  register: php_installed
-  when: php5fpm|failed
+# Uncomment this if you want to see the content of php5fpm
+#- debug: var=php5fpm
 
 # Add php5 repository if never done before
 - name: php5.yml | Add php5 repository
   apt_repository: repo='deb http://packages.dotdeb.org wheezy-php55 all' state=present
-  # I could have used
-  # when: php5fpm|failed
-  # but this is more clear
-  when: not php_installed
+  when: php5fpm|failed
 
 # Add php5 repository key to apt keyring if never done before
 - name: php5.yml | Add php5 repository key
   apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
-  when: not php_installed
+  when: php5fpm|failed
 
-# Refresh apt packages if never done before
+# Refresh apt packages
 - name: php5.yml | Update apt
   apt: update_cache=yes
-  when: not php_installed
+  when: php5fpm|failed
 
 # Install packages defined in vars.yml ensuring that the latest version in installed
 # This means that once the packages are installed it will keep them updated

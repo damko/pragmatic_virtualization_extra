@@ -1,22 +1,47 @@
 ---
 - hosts: all
+
+  # Tells Ansible to run the commands with sudo
   sudo: true
+
+  # File containing the variables used in Ansible scripts
   vars_files:
     - vars.yml
+
+  # List of actions to execute before any task
   pre_tasks:
     - name: playbook.yml | Run apt-get update if it was run last time more than 12 hours ago
       apt: update_cache=yes cache_valid_time=43200
+
+  # List of tasks that will be executed sequentially
   tasks:
+
+    # initial setup: it installs common packages like 'curl', 'vim' ...
     - include: tasks/init.yml
-    - include: tasks/apache2.yml
+
+    # installs PHP5
     - include: tasks/php5.yml
+
+    # installs the Apache2 web server
+    - include: tasks/apache2.yml
+
+    # install Xdebug that can be used to debug the PHP code in your editor
     - include: tasks/xdebug.yml
+
+    # installs Composer, a tool for dependency management in PHP
     - {
       include: tasks/composer.yml,
+      # these variable declarations override the variables declared in vars.yml
       composer_path: "/usr/local/bin/composer",
       composer_keep_updated: true
     }
+
+    # installs Psysh a runtime console for PHP used in the PHPBridge course
     - include: tasks/psysh.yml
+
+  # Handlers are used in Ansible tasks with this syntax example
+  # notify: restart apache2
+  # which means "after running this task execute `service: name=apache2 state=restarted enabled=yes`"
   handlers:
     - name: restart apache2
       service: name=apache2 state=restarted enabled=yes
