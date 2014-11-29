@@ -39,11 +39,18 @@
     # installs Mysql using Benno Joy's role
     - {
         role: bennojoy.mysql,
-            mysql_root_db_pass: password,
+
+            # mysql root password
+            mysql_root_db_pass: pass,
+
+            # mysql port open only for IP 127.0.0.1
             mysql_bind_address: 127.0.0.1,
+
+            # do not create any db
             mysql_db: [],
+
+            # no additional mysql user
             mysql_users: [],
-            mysql_repl_user: []
     }
 
     # installs Psysh a runtime console for PHP used in the PHPBridge course
