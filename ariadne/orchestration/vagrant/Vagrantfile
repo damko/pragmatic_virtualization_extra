@@ -33,6 +33,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # NFS settings
         devel.vm.synced_folder "../../projects", "/vagrant", type: "nfs"
 
+        # Use Ansible as automation tool
+        devel.vm.provision "ansible" do |ansible|
+
+            ansible.playbook = "../ansible/ariadne-dev-playbook.yml"
+
+            # Run commands as root
+            ansible.sudo = true
+
+        end
+
         # Virtualbox settings
         devel.vm.provider "virtualbox" do |vb|
             vb.name = VB_DEV_VM_NAME

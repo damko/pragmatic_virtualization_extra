@@ -1,0 +1,9 @@
+---
+# This task installs psysh http://psysh.org/
+
+- name: psysh.yml | Install psysh for the vagrant user
+  command: su -c "composer global require psy/psysh:@stable" vagrant
+  ignore_errors: yes
+
+- name: psysh.yml | Ensure that ~/.composer/vendor/bin is in PATH
+  lineinfile: dest=/home/vagrant/.profile regexp='^PATH="$PATH:/home/vagrant/.composer/vendor/bin/"' line='PATH="$PATH:/home/vagrant/.composer/vendor/bin/"' owner=vagrant group=vagrant mode=0644

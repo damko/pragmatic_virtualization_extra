@@ -1,0 +1,28 @@
+---
+- hosts: all
+  sudo: true
+  vars_files:
+    - vars.yml
+  pre_tasks:
+    - name: playbook.yml | Run apt-get update if it was run last time more than 12 hours ago
+      apt: update_cache=yes cache_valid_time=43200
+  tasks:
+    - include: tasks/init.yml
+    - include: tasks/apache2.yml
+    - include: tasks/php5.yml
+    - include: tasks/xdebug.yml
+    - {
+      include: tasks/composer.yml,
+      composer_path: "/usr/local/bin/composer",
+      composer_keep_updated: true
+    }
+    - include: tasks/psysh.yml
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted enabled=yes
+
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted enabled=yes
+
+    - name: restart mysql
+      service: name=mysql state=restarted enabled=yes

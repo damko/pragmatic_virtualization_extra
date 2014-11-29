@@ -1,0 +1,7 @@
+---
+# This task takes care of the PHP installation and configuration
+
+# Install packages defined in vars.yml
+- name: xdebug.yml | Install xdebug
+  apt: pkg={{ item }} state=latest
+  with_items: xdebug_packages

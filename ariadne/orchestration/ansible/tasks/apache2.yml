@@ -1,0 +1,10 @@
+---
+# This task takes care of the apache installation and configuration
+
+# Install packages defined in vars.yml ensuring that the latest version in installed
+- name: apache2.yml | Install Apache Packages
+  apt: pkg={{ item }} state=latest
+  with_items: apache_packages
+
+- name: apache2.yml | Enable Apache rewrite module
+  apache2_module: state=present name=rewrite

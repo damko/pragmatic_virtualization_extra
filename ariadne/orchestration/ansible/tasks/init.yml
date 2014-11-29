@@ -1,0 +1,16 @@
+---
+# This task takes care of the os basic setup
+
+# Install packages defined in vars.yml
+- name: init.yml | Install Sys Packages
+  apt: pkg={{ item }} state=latest
+  with_items: sys_packages
+
+- name: init.yml | run Security Upgrade
+  apt: upgrade=safe
+
+- name: init.yml | Ensure NTP is installed
+  apt: pkg=ntp state=installed
+
+- name: init.yml | Ensure NTP is running
+  service: name=ntp state=restarted enabled=yes

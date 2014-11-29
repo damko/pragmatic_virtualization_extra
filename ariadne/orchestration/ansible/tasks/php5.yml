@@ -1,0 +1,45 @@
+---
+# This task takes care of the PHP installation and configuration
+
+- name: php5.yml | Check if php5-fpm is already installed
+  command: dpkg -s php5-fpm
+  ignore_errors: yes
+  register: php5fpm
+  failed_when: "'is not installed' in php5fpm.stderr"
+
+# This is here to show how you can set a variable inside a task
+- name: register php_installed == true
+  shell: echo "true"
+  register: php_installed
+  when: php5fpm|success
+
+# This is here to show how you can set a variable inside a task
+- name: register php_installed == false
+  shell: echo "false"
+  register: php_installed
+  when: php5fpm|failed
+
+# Add php5 repository if never done before
+- name: php5.yml | Add php5 repository
+  apt_repository: repo='deb http://packages.dotdeb.org wheezy-php55 all' state=present
+  # I could have used
+  # when: php5fpm|failed
+  # but this is more clear
+  when: not php_installed
+
+# Add php5 repository key to apt keyring if never done before
+- name: php5.yml | Add php5 repository key
+  apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
+  when: not php_installed
+
+# Refresh apt packages if never done before
+- name: php5.yml | Update apt
+  apt: update_cache=yes
+  when: not php_installed
+
+# Install packages defined in vars.yml ensuring that the latest version in installed
+# This means that once the packages are installed it will keep them updated
+# Switch latest to present if you don't want automatic updates
+- name: php5.yml | Install PHP Packages
+  apt: pkg={{ item }} state=latest
+  with_items: php_packages
