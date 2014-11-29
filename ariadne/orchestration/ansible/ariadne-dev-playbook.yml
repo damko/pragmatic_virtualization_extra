@@ -36,6 +36,16 @@
       composer_keep_updated: true
     }
 
+    # installs Mysql using Benno Joy's role
+    - {
+        role: bennojoy.mysql,
+            mysql_root_db_pass: password,
+            mysql_bind_address: 127.0.0.1,
+            mysql_db: [],
+            mysql_users: [],
+            mysql_repl_user: []
+    }
+
     # installs Psysh a runtime console for PHP used in the PHPBridge course
     - include: tasks/psysh.yml
 
