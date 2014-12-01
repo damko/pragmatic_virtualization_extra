@@ -10,21 +10,6 @@
 # Uncomment this if you want to see the content of php5fpm
 #- debug: var=php5fpm
 
-# # Add php5 repository if never done before
-# - name: php5.yml | Add php5 repository
-#   apt_repository: repo='deb http://packages.dotdeb.org wheezy-php55 all' state=present
-#   when: php5fpm|failed
-
-# # Add php5 repository key to apt keyring if never done before
-# - name: php5.yml | Add php5 repository key
-#   apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
-#   when: php5fpm|failed
-
-# Refresh apt packages
-# - name: php5.yml | Update apt
-#   apt: update_cache=yes
-#   when: php5fpm|failed
-
 # Install packages defined in vars.yml ensuring that the latest version in installed
 # This means that once the packages are installed it will keep them updated
 # Switch latest to present if you don't want automatic updates

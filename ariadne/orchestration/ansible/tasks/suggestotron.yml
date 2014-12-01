@@ -4,15 +4,6 @@
 - name: suggestotron.yml | Create symlink /var/www/"{{ domain }}" pointing to /vagrant/"{{ application_name }}"/
   file: src=/vagrant/"{{ application_name }}"/ dest=/var/www/"{{ domain }}" owner=www-data group=www-data state="link"
 
-# - name: suggestotron.yml | Disable Apache default virtualhost file."
-#   file: path=/etc/apache2/sites-enabled/000-default state=absent
-
-# - name: suggestotron.yml | Remove Apache default virtualhost file."
-#   file: path=/etc/apache2/sites-available/default state=absent
-
-# - name: suggestotron.yml | Remove Apache default ssl virtualhost file."
-#   file: path=/etc/apache2/sites-available/default-ssl state=absent
-
 - name: suggestotron.yml | Add host to /etc/hosts
   lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 localhost {{ domain }} www.{{ domain }}' owner=root group=root mode=0644
 
