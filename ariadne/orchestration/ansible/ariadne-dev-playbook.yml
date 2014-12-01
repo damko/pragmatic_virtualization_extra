@@ -51,7 +51,9 @@
             mysql_bind_address: 127.0.0.1,
 
             # do not create any db
-            mysql_db: [],
+            mysql_db: [
+              name: suggestotron
+            ],
 
             # no additional mysql user
             mysql_users: [],
