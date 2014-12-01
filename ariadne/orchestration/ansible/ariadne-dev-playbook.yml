@@ -39,6 +39,9 @@
     # installs Psysh a runtime console for PHP used in the PHPBridge course
     - include: tasks/psysh.yml
 
+    # populates the suggestotron db right after its creation
+    - include: tasks/populate_suggestotron_db.yml
+
   roles:
     # installs Mysql using Benno Joy's role
     - {

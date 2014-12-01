@@ -1,0 +1,18 @@
+---
+# This populates the suggestotron database
+
+- name: populating suggestotron database
+  shell: echo "show tables" | mysql -uroot -proot suggestotron | grep "topics"
+  ignore_errors: yes
+  register: populated
+  failed_when: "'topics' not in populated.stdout"
+
+#- debug:  var=populated
+
+# Copies the sql file containing the database data to /tmp
+- copy: src=sql/suggestotron_init.sql dest=/tmp
+  when: populated|failed
+
+# Imports the data in the database
+- mysql_db: name=suggestotron state=import target=/tmp/suggestotron_init.sql
+  when: populated|failed
