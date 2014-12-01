@@ -1,0 +1,24 @@
+---
+# This task takes care of the settings required to run the Hello World example
+
+- name: suggestotron.yml | Create symlink /var/www/"{{ domain }}" pointing to /vagrant/"{{ application_name }}"/
+  file: src=/vagrant/"{{ application_name }}"/ dest=/var/www/"{{ domain }}" owner=www-data group=www-data state="link"
+
+# - name: suggestotron.yml | Disable Apache default virtualhost file."
+#   file: path=/etc/apache2/sites-enabled/000-default state=absent
+
+# - name: suggestotron.yml | Remove Apache default virtualhost file."
+#   file: path=/etc/apache2/sites-available/default state=absent
+
+# - name: suggestotron.yml | Remove Apache default ssl virtualhost file."
+#   file: path=/etc/apache2/sites-available/default-ssl state=absent
+
+- name: suggestotron.yml | Add host to /etc/hosts
+  lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 localhost {{ domain }} www.{{ domain }}' owner=root group=root mode=0644
+
+- name: suggestotron.yml | Copy Apache vhost for "{{ domain }}"
+  template: src="{{ application_name }}.vhost" dest=/etc/apache2/sites-available/ owner=root group=root mode=0644
+
+- name: suggestotron.yml | Enable Apache vhost "{{ domain }}"
+  file: src=/etc/apache2/sites-available/"{{ application_name }}.vhost" dest=/etc/apache2/sites-enabled/"{{ application_name }}.vhost" owner=root group=root state="link"
+  notify: restart apache2

@@ -1,0 +1,29 @@
+#
+# Apache vhost for {{ domain }}
+#
+# It runs the Apache macro module using the standard_project.macro template
+
+<VirtualHost *:80>
+
+    #ServerAdmin <your_email>
+    ServerName {{ domain }}
+    ServerAlias www.{{ domain }}
+    DocumentRoot /var/www/{{ domain }}/public/
+
+    <Directory /var/www/{{ domain }}/public/>
+
+            Options Indexes FollowSymLinks MultiViews
+            AllowOverride all
+            Order allow,deny
+            allow from all
+
+    </Directory>
+
+    ## Logfiles configuration
+    ErrorLog ${APACHE_LOG_DIR}/{{ domain }}_error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ domain }}_access.log vhost_combined
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	LogLevel info
+
+</Virtualhost>
