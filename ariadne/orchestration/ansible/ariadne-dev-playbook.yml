@@ -36,12 +36,16 @@
       composer_keep_updated: true
     }
 
+    # installs Psysh a runtime console for PHP used in the PHPBridge course
+    - include: tasks/psysh.yml
+
+  roles:
     # installs Mysql using Benno Joy's role
     - {
         role: bennojoy.mysql,
 
             # mysql root password
-            mysql_root_db_pass: pass,
+            mysql_root_db_pass: root,
 
             # mysql port open only for IP 127.0.0.1
             mysql_bind_address: 127.0.0.1,
@@ -52,9 +56,6 @@
             # no additional mysql user
             mysql_users: [],
     }
-
-    # installs Psysh a runtime console for PHP used in the PHPBridge course
-    - include: tasks/psysh.yml
 
   # Handlers are used in Ansible tasks with this syntax example
   # notify: restart apache2
