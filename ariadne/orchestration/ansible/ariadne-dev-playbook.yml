@@ -19,11 +19,11 @@
     # initial setup: it installs common packages like 'curl', 'vim' ...
     - include: tasks/init.yml
 
-    # installs PHP5
-    - include: tasks/php5.yml
-
     # installs the Apache2 web server
     - include: tasks/apache2.yml
+
+    # installs PHP5
+    - include: tasks/php5.yml
 
     # install Xdebug that can be used to debug the PHP code in your editor
     - include: tasks/xdebug.yml
