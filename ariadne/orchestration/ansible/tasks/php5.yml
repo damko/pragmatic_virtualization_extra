@@ -16,3 +16,8 @@
 - name: php5.yml | Install PHP Packages
   apt: pkg={{ item }} state=latest
   with_items: php_packages
+
+- name: php5.yml | enable Apache2 PHP module
+  command: a2enmod php5
+  when: php5fpm|failed
+  notify: restart apache2
