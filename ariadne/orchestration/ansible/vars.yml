@@ -1,6 +1,6 @@
 sys_packages: [ 'curl', 'vim', 'python-pycurl', 'python-apt', 'aptitude', 'multitail', 'tree']
 db_packages:  [ 'mysql-server', 'mysql-client', 'python-mysqldb' ]
-apache_packages: [ 'apache2', 'libapache2-mod-php5', 'libapache2-mod-macro']
+apache_packages: [ 'apache2', 'libapache2-mod-php5']
 php_packages: [ 'php5-fpm', 'php5-curl', 'php5-cli', 'php5-mysql' ]
 xdebug_packages: [ 'php5-xdebug' ]
 composer_path: /usr/local/bin/composer
