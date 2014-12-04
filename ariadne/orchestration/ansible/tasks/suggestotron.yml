@@ -12,4 +12,6 @@
 
 - name: suggestotron.yml | Enable Apache vhost "{{ domain }}"
   file: src=/etc/apache2/sites-available/"{{ application_name }}.vhost" dest=/etc/apache2/sites-enabled/"{{ application_name }}.vhost" owner=root group=root state="link"
-  notify: restart apache2
+
+- name: suggestotron.yml | force Apache2 restart
+  service: name=apache2 state=restarted

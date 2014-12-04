@@ -46,7 +46,7 @@
     - {
         include: tasks/suggestotron.yml,
         application_name: "suggestotron",
-        domain: "{{ application_name }}.dev"
+        domain: "{{ application_name }}.ariadne-dev"
       }
 
   roles:
