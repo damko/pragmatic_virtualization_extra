@@ -12,6 +12,10 @@ VG_BOX_NAME = "debian_wheezy_770_64bit"
 VB_DEV_VM_NAME = "ariadne-dev"
 VB_DEV_VM_IP = "192.168.51.10"
 
+# Digital Ocean virtual machine for production
+DO_VM_NAME = "ariadne-prod"
+DO_TOKEN = "647675865bb75263e484b50d4cff17fca9ae3a9ae1df380f1d8cfc473fff5077"
+
 ############################################################
 
 
@@ -55,6 +59,64 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             vb.customize ["modifyvm", :id, "--cpus", "1"]
             vb.customize ["modifyvm", :id, "--ioapic", "on"]
         end
+    end
+
+
+    #DIGITAL OCEAN
+    #
+    # If the droplet does not exist yet use this command to create the vm
+    # vagrant up --provider=digital_ocean <vm_name>
+    #
+    #  After the droplet has been created you can use
+    # vagrant up <vm_name>
+    #
+    config.vm.define DO_VM_NAME do |production|
+
+      # this is the provider
+      production.vm.box = "digital_ocean"
+      production.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+      # this disables the NFS support
+      production.vm.synced_folder ".", "/vagrant", disabled: true
+
+      # your public ssh key path
+      production.ssh.private_key_path = "/home/damko/.ssh/id_rsa"
+
+      production.vm.provider :digital_ocean do |provider|
+
+        # your token
+        provider.token = DO_TOKEN
+
+        # Droplet type.
+        # To get the list of the available droplets you can use this command
+        # curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer <your_token>' "https://api.digitalocean.com/v2/images?type=distribution"
+        provider.image = "debian-7-0-x64"
+
+        # Droplet location
+        # To get the list of the available regions you can use this command
+        # curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Bearer <your_token>' "https://api.digitalocean.com/v2/regions"
+        provider.region = "ams2"
+
+        # How much ram for the droplet.
+        # Careful here! The monthly cost of the droplet is affected by this parameter
+        # Check the costs here https://cloud.digitalocean.com/droplets/new before changing them
+        provider.size = "512MB"
+
+        # Enables or disables the automated backup provided by Digital Ocean
+        # Careful here! The monthly cost of the droplet is affected by this parameter
+        provider.backups_enabled = false
+
+        # A string representing the name to use when creating a DigitalOcean SSH key for VPS authentication. It defaults to Vagrant.
+        provider.ssh_key_name = "damko@nitro"
+
+      end
+
+      production.vm.provision "ansible" do |ansible|
+
+        ansible.playbook = "../ansible/ariadne-prod-playbook.yml"
+
+      end
+
     end
 
 end

@@ -1,0 +1,80 @@
+---
+- hosts: all
+
+  # http://docs.ansible.com/playbooks_variables.html#information-discovered-from-systems-facts
+  gather_facts: yes
+
+  # Tells Ansible to run the commands with sudo
+  sudo: true
+
+  # File containing the variables used in Ansible scripts
+  vars_files:
+    - vars.yml
+
+  # List of actions to execute before any task
+  pre_tasks:
+    - name: playbook.yml | Run apt-get update if it was run last time more than 12 hours ago
+      apt: update_cache=yes cache_valid_time=43200
+
+  # List of tasks that will be executed sequentially
+  tasks:
+
+    # initial setup: it installs common packages like 'curl', 'vim' ...
+    - include: tasks/init.yml
+
+    # installs the Apache2 web server
+    - include: tasks/apache2.yml
+
+    # installs PHP5
+    - include: tasks/php5.yml
+
+    # installs Composer, a tool for dependency management in PHP
+    - {
+      include: tasks/composer.yml,
+      # these variable declarations override the variables declared in vars.yml
+      composer_path: "/usr/local/bin/composer",
+      composer_keep_updated: true
+    }
+
+    # populates the suggestotron db right after its creation
+    - include: tasks/populate_suggestotron_db.yml
+
+    # creates the Apache2 vhost for http://suggestotron
+    - {
+        include: tasks/suggestotron.yml,
+        application_name: "suggestotron",
+        domain: "{{ application_name }}.ariadne.prod"
+      }
+
+  roles:
+    # installs Mysql using Benno Joy's role
+    - {
+        role: bennojoy.mysql,
+
+            # mysql root password
+            mysql_root_db_pass: root,
+
+            # mysql port open only for IP 127.0.0.1
+            mysql_bind_address: 127.0.0.1,
+
+            # do not create any db
+            mysql_db: [
+              name: suggestotron
+            ],
+
+            # no additional mysql user
+            mysql_users: [],
+    }
+
+  # Handlers are used in Ansible tasks with this syntax example
+  # notify: restart apache2
+  # which means "after running this task execute `service: name=apache2 state=restarted enabled=yes`"
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted enabled=yes
+
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted enabled=yes
+
+    - name: restart mysql
+      service: name=mysql state=restarted enabled=yes
