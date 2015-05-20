@@ -1,0 +1,42 @@
+VAGRANTFILE_API_VERSION = "2"
+
+############################################################
+# VARIABLES
+
+# Vagrant template box name
+VG_BOX_NAME = "debian_jessie_800_64bit"
+
+# Local virtual machine for development
+VB_DEV_VM_NAME = "deb/jessie-amd64"
+
+############################################################
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    # Vagrant settings for the development vm
+    config.vm.define VB_DEV_VM_NAME, primary: true do |devel|
+
+        # Vagrant box name. This the Vagrant template (created by Packer) from which the vagrant vm will be generated
+        devel.vm.box = VG_BOX_NAME
+
+        # Hostname for the generated Vagrant vm
+        devel.vm.hostname = VB_DEV_VM_NAME
+
+        # Folder sharing is now disabled
+        devel.vm.synced_folder  ".", "/projects", disabled: true
+
+        # Virtualbox settings
+        devel.vm.provider "virtualbox" do |vb|
+            vb.name = VB_DEV_VM_NAME
+
+            ## If true it does not boot in headless mode => shows virtualbox UI. Uncomment only for troubleshooting.
+            #vb.gui = true
+
+            # Uses VBoxManage to customize the VM
+            vb.customize ["modifyvm", :id, "--memory", "512"]
+            vb.customize ["modifyvm", :id, "--cpus", "1"]
+            vb.customize ["modifyvm", :id, "--ioapic", "on"]
+        end
+    end
+
+end
