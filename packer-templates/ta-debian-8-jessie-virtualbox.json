@@ -30,7 +30,7 @@
       ],
       "disk_size": "{{user `disk_size`}}",
       "guest_os_type": "Debian_64",
-      "headless": true,
+      "headless": false,
       "http_directory": "http",
       "iso_checksum": "{{user `iso_md5`}}",
       "iso_checksum_type": "md5",

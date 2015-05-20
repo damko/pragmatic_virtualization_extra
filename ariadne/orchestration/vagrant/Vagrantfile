@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 # VARIABLES
 
 # Vagrant template box name
-VG_BOX_NAME = "debian_wheezy_770_64bit"
+VG_BOX_NAME = "debian_jessie_800_64bit"
 
 # Local virtual machine for development
 VB_DEV_VM_NAME = "ariadne-dev"
