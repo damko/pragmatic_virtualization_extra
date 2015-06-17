@@ -8,10 +8,10 @@
   lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 localhost {{ domain }} www.{{ domain }}' owner=root group=root mode=0644
 
 - name: suggestotron.yml | Copy Apache vhost for "{{ domain }}"
-  template: src="{{ application_name }}.vhost" dest=/etc/apache2/sites-available/ owner=root group=root mode=0644
+  template: src="{{ application_name }}-vhost.conf" dest=/etc/apache2/sites-available/ owner=root group=root mode=0644
 
 - name: suggestotron.yml | Enable Apache vhost "{{ domain }}"
-  file: src=/etc/apache2/sites-available/"{{ application_name }}.vhost" dest=/etc/apache2/sites-enabled/"{{ application_name }}.vhost" owner=root group=root state="link"
+  file: src=/etc/apache2/sites-available/"{{ application_name }}-vhost.conf" dest=/etc/apache2/sites-enabled/"{{ application_name }}-vhost.conf" owner=root group=root state="link"
 
 - name: suggestotron.yml | force Apache2 restart
   service: name=apache2 state=restarted
